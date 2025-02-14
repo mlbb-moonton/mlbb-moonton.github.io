@@ -15,7 +15,7 @@
         "@type": "NewsMediaOrganization",
         "name": "Berita MLBB-Moonton",
         "url": "https://mlbb-moonton.github.io/berita/",
-        "logo": "https://mlbb-moonton.github.io/logo.png"
+        "logo": "https://asetgambar.b-cdn.net/mlbb-moonton-berita-logo.jpeg"
     }
     </script>
     <style>
@@ -39,7 +39,7 @@
     </main>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            fetch("data.json")
+            fetch("https://mlbb-moonton.github.io/berita/data.json")
                 .then(response => response.json())
                 .then(data => {
                     const newsContainer = document.getElementById("news-container");
