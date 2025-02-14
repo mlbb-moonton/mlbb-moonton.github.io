@@ -39,34 +39,44 @@
     </main>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-    fetch("https://mlbb-moonton.github.io/berita/data.json")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
+    let newsData = [];
+    let newsContainer = document.getElementById("news-container");
+    let itemsPerLoad = 10;
+    let currentIndex = 0;
+
+    // Fetch berita dari JSON
+    fetch("https://mlbb-moonton.github.io/berita/data.json?t=" + new Date().getTime())
+        .then(response => response.json())
         .then(data => {
-            console.log("✅ Data berhasil di-load:", data); // Debugging
-            const newsContainer = document.getElementById("news-container");
+            // 🔥 SORT BERITA BERDASARKAN TANGGAL TERBARU 🔥
+            newsData = data.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-            if (!newsContainer) {
-                console.error("❌ ERROR: Elemen #news-container tidak ditemukan di HTML!");
-                return;
-            }
-
-            newsContainer.innerHTML = data.map(news => `
-                <div class="news-item" itemscope itemtype="https://schema.org/NewsArticle">
-                    <img src="${news.image}" alt="${news.title}" itemprop="image">
-                    <h2 itemprop="headline"><a href="${news.url}" itemprop="url">${news.title}</a></h2>
-                    <p class="news-meta">Dipublikasikan pada <span itemprop="datePublished">${news.date}</span></p>
-                    <p itemprop="description">${news.description}</p>
-                </div>
-            `).join("");
+            loadMoreNews(); // Load berita pertama kali
         })
         .catch(error => console.error("❌ Error fetching news:", error));
-});
 
+    function loadMoreNews() {
+        let endIndex = currentIndex + itemsPerLoad;
+        let newsToShow = newsData.slice(currentIndex, endIndex);
+        currentIndex = endIndex;
+
+        newsContainer.innerHTML += newsToShow.map(news => `
+            <div class="news-item" itemscope itemtype="https://schema.org/NewsArticle">
+                <img src="${news.image}" alt="${news.title}" itemprop="image" loading="lazy">
+                <h2 itemprop="headline"><a href="${news.url}" itemprop="url">${news.title}</a></h2>
+                <p class="news-meta">Dipublikasikan pada <span itemprop="datePublished">${news.date}</span></p>
+                <p itemprop="description">${news.description}</p>
+            </div>
+        `).join("");
+    }
+
+    // Event untuk Infinite Scroll
+    window.addEventListener("scroll", function () {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+            loadMoreNews();
+        }
+    });
+});
     </script>
 </body>
 </html>
