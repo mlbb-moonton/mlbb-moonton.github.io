@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Berita terbaru dan terpercaya tentang Mobile Legends: Bang Bang (MLBB). Ikuti update terkini seputar game, turnamen, dan strategi terbaik!">
+    <meta property="og:title" content="Berita MLBB-Moonton">
+    <meta property="og:description" content="Berita terbaru dan terpercaya tentang Mobile Legends: Bang Bang (MLBB).">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mlbb-moonton.github.io/berita/">
+    <title>Berita MLBB-Moonton</title>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "NewsMediaOrganization",
+        "name": "Berita MLBB-Moonton",
+        "url": "https://mlbb-moonton.github.io/berita/",
+        "logo": "https://mlbb-moonton.github.io/logo.png"
+    }
+    </script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+        header { background: #2c3e50; color: white; text-align: center; padding: 20px; }
+        .news-container { max-width: 800px; margin: 20px auto; padding: 20px; background: white; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
+        .news-item { border-bottom: 1px solid #ddd; padding: 15px 0; }
+        .news-item img { max-width: 100%; border-radius: 5px; }
+        .news-item h2 { font-size: 1.5em; margin: 10px 0; }
+        .news-item a { text-decoration: none; color: #3498db; }
+        .news-item p { color: #555; }
+        .news-meta { font-size: 0.8em; color: gray; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Berita MLBB-Moonton</h1>
+    </header>
+    <main>
+        <div class="news-container" id="news-container"></div>
+    </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("data.json")
+                .then(response => response.json())
+                .then(data => {
+                    const newsContainer = document.getElementById("news-container");
+                    newsContainer.innerHTML = data.map(news => `
+                        <div class="news-item" itemscope itemtype="https://schema.org/NewsArticle">
+                            <img src="${news.image}" alt="${news.title}" itemprop="image">
+                            <h2 itemprop="headline"><a href="${news.url}" itemprop="url">${news.title}</a></h2>
+                            <p class="news-meta">Dipublikasikan pada <span itemprop="datePublished">${news.date}</span></p>
+                            <p itemprop="description">${news.description}</p>
+                        </div>
+                    `).join("");
+                })
+                .catch(error => console.error("Error fetching news:", error));
+        });
+    </script>
+</body>
+</html>
